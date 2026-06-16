@@ -75,21 +75,18 @@
     color:var(--ink-dim); letter-spacing:.04em;
   }
   .nav-tags{
-    display:flex; align-items:center; gap:10px;
+    display:flex; align-items:center; gap:0;
+    font-family:var(--mono); font-size:13px;
   }
-  .navbar .nav-tag{
-    font-family:var(--mono); font-size:12px; color:var(--ink-dim);
-    border:1px solid var(--line); border-radius:999px;
-    padding:7px 14px;
+  .nav-tags .nav-tag-accent{
+    color:var(--signal); font-weight:600;
   }
-  .navbar .nav-tag-accent{
-    color:var(--signal);
-    border-color:var(--signal-dim);
-    background:rgba(94,224,192,.08);
+  .nav-tags .nav-tag-plain{
+    color:var(--ink-dim);
   }
   @media (max-width:560px){
     .navbar{padding:14px 18px;}
-    .navbar .nav-tag{display:none;}
+    .nav-tags{display:none;}
   }
 
   header{
@@ -367,8 +364,7 @@
     <span class="name">CIFP DON BOSCO LHII<small>Errenteria · Gipuzkoa</small></span>
   </div>
   <div class="nav-tags">
-    <span class="nav-tag nav-tag-accent">AA Lantaldea</span>
-    <span class="nav-tag">Praktika onak</span>
+    <span class="nav-tag-accent">AA Lantaldea - </span> <span class="nav-tag-plain">Praktika onak eta errekurtsoak</span>
   </div>
 </nav>
 
