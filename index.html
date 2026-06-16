@@ -47,35 +47,49 @@
   a{color:var(--signal); text-decoration:none;}
   a:focus-visible, button:focus-visible{outline:2px solid var(--signal); outline-offset:3px;}
 
+  .navbar{
+    position:sticky; top:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 64px;
+    background:rgba(11,15,20,.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .navbar .brand{
+    display:flex; align-items:center; gap:12px;
+    font-weight:700; font-size:15px; letter-spacing:.01em;
+    color:var(--ink);
+  }
+  .navbar .brand .mark{
+    width:34px; height:34px; border-radius:9px;
+    background:linear-gradient(135deg, var(--signal-dim), var(--signal) 130%);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-weight:700; font-size:13px; color:var(--bg);
+    flex-shrink:0;
+  }
+  .navbar .brand .name{
+    display:flex; flex-direction:column; line-height:1.2;
+  }
+  .navbar .brand .name small{
+    font-family:var(--mono); font-size:11px; font-weight:500;
+    color:var(--ink-dim); letter-spacing:.04em;
+  }
+  .navbar .nav-tag{
+    font-family:var(--mono); font-size:12px; color:var(--ink-dim);
+    border:1px solid var(--line); border-radius:999px;
+    padding:7px 14px;
+  }
+  @media (max-width:560px){
+    .navbar{padding:14px 18px;}
+    .navbar .nav-tag{display:none;}
+  }
+
   header{
     position:relative; z-index:1;
-    padding:88px 64px 64px;
+    padding:72px 64px 56px;
     max-width:1600px; margin:0 auto;
     display:flex; flex-direction:column; align-items:center;
     text-align:center;
-  }
-
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:8px;
-    font-family:var(--mono);
-    font-size:12.5px; letter-spacing:.12em; text-transform:uppercase;
-    color:var(--signal);
-    border:1px solid var(--signal-dim);
-    background:rgba(94,224,192,.06);
-    padding:6px 12px;
-    border-radius:999px;
-    margin-bottom:28px;
-  }
-  .eyebrow .dot{
-    width:6px; height:6px; border-radius:50%;
-    background:var(--signal);
-    box-shadow:0 0 0 0 rgba(94,224,192,.6);
-    animation:pulse 2.4s infinite;
-  }
-  @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(94,224,192,.45);}
-    70%{box-shadow:0 0 0 8px rgba(94,224,192,0);}
-    100%{box-shadow:0 0 0 0 rgba(94,224,192,0);}
   }
 
   h1{
@@ -96,33 +110,41 @@
     margin:0 auto 40px;
   }
 
-  .meta-row{
-    display:flex; flex-wrap:wrap; gap:12px;
-    justify-content:center;
-  }
-  .meta-row .pill{
-    font-family:var(--mono);
-    font-size:12.5px;
-    color:var(--ink-dim);
-    border:1px solid var(--line);
-    border-radius:8px;
-    padding:8px 14px;
-  }
-  .meta-row .pill strong{color:var(--ink); font-weight:600;}
-
   main{
     position:relative; z-index:1;
     max-width:1600px; margin:0 auto;
     padding:0 64px 140px;
   }
 
+  .note-banner{
+    margin-top:48px;
+    padding:20px 28px;
+    border:1px solid var(--signal-dim);
+    background:rgba(94,224,192,.05);
+    border-radius:10px;
+    display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 16px;
+  }
+  .note-banner-label{
+    font-family:var(--mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--signal);
+    flex-shrink:0;
+  }
+  .note-banner p{
+    margin:0; color:var(--ink-dim); font-size:14.5px; flex-grow:1;
+  }
+  .note-banner a{
+    font-weight:600; white-space:nowrap;
+  }
+
   .section-head{
     display:flex; align-items:baseline; justify-content:space-between;
     gap:16px; flex-wrap:wrap;
-    margin:72px 0 32px;
+    margin:56px 0 32px;
+    padding-top:40px;
+    border-top:1px solid var(--line);
   }
   .section-head h2{
-    font-size:1.7rem; margin:0; font-weight:600;
+    font-size:1.6rem; margin:0; font-weight:650; letter-spacing:-.005em;
   }
 
   .grid{
@@ -134,13 +156,15 @@
   .card{
     background:var(--panel);
     border:1px solid var(--line);
-    border-radius:var(--radius);
+    border-left:3px solid var(--signal-dim);
+    border-radius:10px;
     padding:28px 32px;
     display:flex; flex-direction:column; gap:14px;
     transition:border-color .2s ease;
   }
   .card:hover{
-    border-color:var(--signal-dim);
+    border-color:var(--line);
+    border-left-color:var(--signal);
   }
   .card:not(.multi){
     display:grid;
@@ -176,7 +200,7 @@
   }
 
   .card h3{
-    margin:0; font-size:1.08rem; font-weight:600; line-height:1.3;
+    margin:0; font-size:1.18rem; font-weight:650; line-height:1.3;
   }
   .card h3 .ph{ color:var(--ink-dim); font-weight:500; }
 
@@ -292,17 +316,31 @@
 </head>
 <body>
 
+<nav class="navbar">
+  <div class="brand">
+    <span class="mark">DB</span>
+    <span class="name">CIFP DON BOSCO LHII<small>Errenteria · Gipuzkoa</small></span>
+  </div>
+  <span class="nav-tag">AA Lantaldea</span>
+</nav>
+
 <header>
-  <span class="eyebrow"><span class="dot"></span> AA Lantaldea</span>
   <h1>Adimen artifizialaren <span class="accent">praktika onak</span></h1>
   <p class="lede">
-    AA-ren erabilera arduratsu eta praktikoaren inguruko konpromisoen jarraipena.
-    Lankide bakoitzak bere praktika hautatu eta bideo bidez azaldu du nola
-    txertatu duen ikasgelan.
+    Lantaldeko kideen zeregina 25-26 ikasturtean: irakaskuntzan, ikasi-irakatsi
+    prozesuan, lagunduko duen AA erabilera edota kasu praktikoa landu eta
+    bideo bat sortzea azalpenarekin.
   </p>
   </header>
 
 <main>
+  <div class="note-banner">
+    <span class="note-banner-label">Iaz prestatutako ikastaroa</span>
+    <p>Adimen artifizial sortzailea — Moodle ikastaroa, gogoratzeko edo errepasatzeko eskuragarri.
+      <a href="https://elearning20.hezkuntza.net/012468/course/view.php?id=587" target="_blank" rel="noopener">Ikastarora joan →</a>
+    </p>
+  </div>
+
   <div class="section-head">
     <h2>Praktiken zerrenda</h2>
   </div>
