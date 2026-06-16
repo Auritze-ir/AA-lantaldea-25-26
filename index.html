@@ -145,13 +145,6 @@
   .grid-resources .desc{
     font-size:13.5px;
   }
-  .grid-resources .card:not(.multi){
-    grid-template-columns:1fr;
-  }
-  .grid-resources .card:not(.multi) .card-actions{
-    grid-column:1; grid-row:auto;
-    flex-direction:row; margin-top:6px;
-  }
   .grid-resources .card-actions .btn{
     padding:7px 12px; font-size:12px;
   }
@@ -208,35 +201,6 @@
     border-color:var(--line);
     border-left-color:var(--signal);
   }
-  .card:not(.multi){
-    display:grid;
-    grid-template-columns:1fr auto;
-    column-gap:32px;
-    row-gap:6px;
-    align-items:start;
-  }
-  .card:not(.multi) .card-top,
-  .card:not(.multi) .teacher,
-  .card:not(.multi) .desc{
-    grid-column:1;
-  }
-  .card:not(.multi) .card-actions{
-    grid-column:2;
-    grid-row:1 / -1;
-    align-self:center;
-    margin-top:0;
-  }
-  @media (max-width:680px){
-    .card:not(.multi){
-      grid-template-columns:1fr;
-    }
-    .card:not(.multi) .card-actions{
-      grid-column:1;
-      grid-row:auto;
-      align-self:start;
-    }
-  }
-
   .card-top{
     display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
   }
@@ -260,10 +224,10 @@
     display:flex; gap:10px; margin-top:4px; flex-wrap:wrap;
   }
   .card:not(.multi) .card-actions{
-    flex-direction:column; align-items:stretch;
+    flex-direction:row; align-items:center;
   }
   .card:not(.multi) .card-actions .btn{
-    justify-content:center; white-space:nowrap;
+    white-space:nowrap;
   }
   .btn{
     font-family:var(--mono); font-size:13px;
@@ -451,7 +415,7 @@
   const resources = [
     {
       title: "Google Vids, Gemini & NotebookLM",
-      desc: "Jarraian dagoen estekan, Google Vids & Gemini & NotebookLM erabilera praktikoa erakusten du. Ikaskuntza hibridorako proposamen baliagarria, PPT → Bideo nola egin daitekeen 3 erramintak erabiliz (15:53 - 1:02:00).",
+      desc: "Jarraian dagoen estekan, Google Vids & Gemini & NotebookLM erabilera praktikoa erakusten du. Ikaskuntza hibridorako proposamen baliagarria, PPT → Bideoa nola egin daitekeen 3 erramintak erabiliz (15:53 - 1:02:00).",
       video: "https://www.youtube.com/live/SslqcFiQP7Q",
       script: ""
     },
