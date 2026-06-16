@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AA Praktika Onak — CIFP Don Bosco LHII</title>
+<style>
+  :root{
+    --bg: #0b0f14;
+    --bg-soft: #11161d;
+    --panel: #161d26;
+    --line: #232c38;
+    --ink: #e8edf3;
+    --ink-dim: #9aa7b6;
+    --signal: #5ee0c0;
+    --signal-dim: #2a5a4f;
+    --warn: #f0b35e;
+    --radius: 14px;
+    --mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+    --sans: "Inter", "Segoe UI", system-ui, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* subtle grid texture, evokes a model/network without being loud */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity:.18;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  a{color:var(--signal); text-decoration:none;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--signal); outline-offset:3px;}
+
+  header{
+    position:relative; z-index:1;
+    padding:88px 64px 64px;
+    max-width:1600px; margin:0 auto;
+  }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--mono);
+    font-size:12.5px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--signal);
+    border:1px solid var(--signal-dim);
+    background:rgba(94,224,192,.06);
+    padding:6px 12px;
+    border-radius:999px;
+    margin-bottom:28px;
+  }
+  .eyebrow .dot{
+    width:6px; height:6px; border-radius:50%;
+    background:var(--signal);
+    box-shadow:0 0 0 0 rgba(94,224,192,.6);
+    animation:pulse 2.4s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(94,224,192,.45);}
+    70%{box-shadow:0 0 0 8px rgba(94,224,192,0);}
+    100%{box-shadow:0 0 0 0 rgba(94,224,192,0);}
+  }
+
+  h1{
+    font-size:clamp(2.4rem, 5.2vw, 4.6rem);
+    line-height:1.06;
+    margin:0 0 24px;
+    font-weight:650;
+    letter-spacing:-.01em;
+    max-width:18ch;
+  }
+  h1 .accent{color:var(--signal);}
+
+  .lede{
+    color:var(--ink-dim);
+    font-size:1.18rem;
+    max-width:680px;
+    margin:0 0 40px;
+  }
+
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:12px;
+    border-top:1px solid var(--line);
+    padding-top:24px;
+  }
+  .meta-row .pill{
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--ink-dim);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 14px;
+  }
+  .meta-row .pill strong{color:var(--ink); font-weight:600;}
+
+  main{
+    position:relative; z-index:1;
+    max-width:1600px; margin:0 auto;
+    padding:0 64px 140px;
+  }
+
+  .section-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+    margin:72px 0 32px;
+  }
+  .section-head h2{
+    font-size:1.7rem; margin:0; font-weight:600;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));
+    gap:22px;
+  }
+  .card.multi{
+    grid-column: span 2;
+  }
+  @media (max-width:780px){
+    .card.multi{ grid-column: span 1; }
+  }
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 22px 20px;
+    display:flex; flex-direction:column; gap:14px;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .card:hover{
+    border-color:var(--signal-dim);
+    transform:translateY(-2px);
+  }
+
+  .card-top{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+  }
+
+  .card h3{
+    margin:0; font-size:1.08rem; font-weight:600; line-height:1.3;
+  }
+  .card h3 .ph{ color:var(--ink-dim); font-weight:500; }
+
+  .teacher{
+    font-family:var(--mono); font-size:13px; color:var(--signal);
+  }
+  .teacher .ph{ color:var(--ink-dim); }
+
+  .desc{
+    color:var(--ink-dim); font-size:14.5px; flex-grow:1;
+  }
+  .desc .ph{ font-style:italic; }
+
+  .card-actions{
+    display:flex; gap:10px; margin-top:4px; flex-wrap:wrap;
+  }
+  .btn{
+    font-family:var(--mono); font-size:13px;
+    display:inline-flex; align-items:center; gap:6px;
+    padding:9px 14px; border-radius:9px;
+    border:1px solid var(--line);
+    color:var(--ink-dim);
+    cursor:not-allowed;
+  }
+  .btn.is-live{
+    border-color:var(--signal-dim);
+    color:var(--signal);
+    cursor:pointer;
+  }
+  .btn.is-live:hover{ background:rgba(94,224,192,.08); }
+
+  /* multi-video card variant */
+  .card.multi .video-list{
+    display:flex; flex-direction:column; gap:8px; margin-top:2px;
+  }
+  .video-row{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 12px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:rgba(255,255,255,.015);
+  }
+  .video-row .idx{
+    font-family:var(--mono); font-size:12px; color:var(--ink-dim);
+    width:18px; flex-shrink:0;
+  }
+  .video-row .vlabel{
+    flex-grow:1; font-size:13.5px; color:var(--ink);
+  }
+  .video-row .vlabel .ph{ color:var(--ink-dim); font-style:italic; }
+  .video-row a.btn, .video-row span.btn{
+    padding:5px 11px; font-size:12px; flex-shrink:0;
+  }
+
+  footer{
+    position:relative; z-index:1;
+    border-top:1px solid var(--line);
+    padding:40px 64px 56px;
+    max-width:1600px; margin:0 auto;
+    color:var(--ink-dim); font-size:13.5px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  footer strong{color:var(--ink);}
+
+  @media (max-width:560px){
+    header{padding:52px 18px 40px;}
+    main{padding:0 18px 80px;}
+    footer{padding:28px 18px 40px; flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="eyebrow"><span class="dot"></span> AA Lantaldea</span>
+  <h1>Adimen artifizialaren <span class="accent">praktika onak</span></h1>
+  <p class="lede">
+    AA-ren erabilera arduratsu eta praktikoaren inguruko konpromisoen jarraipena.
+    Lankide bakoitzak bere praktika hautatu eta bideo bidez azaldu du nola
+    txertatu duen ikasgelan.
+  </p>
+  </header>
+
+<main>
+  <div class="section-head">
+    <h2>Praktiken zerrenda</h2>
+  </div>
+
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  <span>CIFP Don Bosco LHII</span>
+  <span>HTML editagarria · GitHub Pages</span>
+</footer>
+
+<script>
+  // ALDATU hemen: praktika bakoitza objektu bat da.
+  // title: irakaslearen praktikaren izena
+  // teacher: irakaslearen izena
+  // desc: azalpen laburra
+  // video: Drive bideoaren link-a (bideo BAKARRA duten praktiketarako; hutsik = "laster")
+  // videos: array bat, bideo BATEN BAINO GEHIAGO duten praktiketarako -> { label, video }
+  const practices = [
+    {
+      title: "Zaintzen kudeaketa automatizatua — Automozioa",
+      teacher: "",
+      desc: "Automozioko mintegian irakasleren bat falta denean egin beharreko zaintzak kudeatzeko aplikazioa, AA erabiliz garatua. Bideoan jasota: egindako lana, aplikazioaren funtzionamendua eta etorkizunean berdina inplementatu nahi izanez gero jarraitu beharreko pausoak.",
+      video: ""
+    },
+    {
+      title: "NotebookLM gelan",
+      teacher: "",
+      desc: "NotebookLM erabiltzeko 3 bideoko gida: iturrien sarrera, koadernoaren konfigurazioa eta aurkezpenen sorrera.",
+      videos: [
+        { label: "1. Sarrera eta iturrietako berrikuntzak", video: "" },
+        { label: "2. Koadernoaren konfigurazioa eta Promt proposamena", video: "" },
+        { label: "3. Aurkezpenen konfigurazioa eta Promt-aren sorrera", video: "" },
+      ]
+    },
+  ];
+
+  const grid = document.getElementById("grid");
+
+  function singleVideoActions(p){
+    const hasVideo = p.video && p.video.trim() !== "";
+    return hasVideo
+      ? `<a class="btn is-live" href="${p.video}" target="_blank" rel="noopener">▶ Bideoa ikusi</a>`
+      : `<span class="btn">▶ Bideoa laster</span>`;
+  }
+
+  function multiVideoList(videos){
+    return `<div class="video-list">${videos.map((v, idx) => {
+      const hasVideo = v.video && v.video.trim() !== "";
+      const label = v.label && v.label.trim() !== "" ? v.label : `<span class="ph">izenburua falta</span>`;
+      return `
+        <div class="video-row">
+          <span class="idx">${idx + 1}.</span>
+          <span class="vlabel">${label}</span>
+          ${hasVideo
+            ? `<a class="btn is-live" href="${v.video}" target="_blank" rel="noopener">▶ Ikusi</a>`
+            : `<span class="btn">▶ Laster</span>`}
+        </div>`;
+    }).join("")}</div>`;
+  }
+
+  function card(p, i){
+    const isMulti = Array.isArray(p.videos) && p.videos.length > 0;
+    const title = p.title && p.title.trim() !== "" ? p.title : `<span class="ph">Praktika ${i+1} — izenburua falta</span>`;
+    const teacher = p.teacher && p.teacher.trim() !== "" ? p.teacher : `<span class="ph">irakaslea falta</span>`;
+    const desc = p.desc && p.desc.trim() !== "" ? p.desc : `<span class="ph">Azalpena laster gehituko da.</span>`;
+    const el = document.createElement("div");
+    el.className = isMulti ? "card multi" : "card";
+    el.innerHTML = `
+      <div class="card-top">
+        <h3>${title}</h3>
+      </div>
+      <div class="teacher">${teacher}</div>
+      <div class="desc">${desc}</div>
+      <div class="card-actions">
+        ${isMulti ? multiVideoList(p.videos) : singleVideoActions(p)}
+      </div>
+    `;
+    return el;
+  }
+
+  practices.forEach((p, i) => grid.appendChild(card(p, i)));
+</script>
+
+</body>
+</html>
