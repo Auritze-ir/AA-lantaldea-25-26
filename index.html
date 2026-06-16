@@ -115,7 +115,7 @@
     color:var(--ink-dim);
     font-size:1.18rem;
     max-width:980px;
-    margin:0 auto;
+    margin:0 auto 24px;
   }
 
   main{
@@ -228,7 +228,7 @@
   }
   .card:not(.multi) .card-actions{
     grid-column:2;
-    grid-row:1 / 4;
+    grid-row:1 / -1;
     align-self:center;
     margin-top:0;
   }
@@ -458,7 +458,6 @@
   const resources = [
     {
       title: "Google Vids, Gemini & NotebookLM",
-      teacher: "",
       desc: "Jarraian dagoen estekan, Google Vids & Gemini & NotebookLM erabilera praktikoa erakusten du. Ikaskuntza hibridorako proposamen baliagarria, PPT → Bideo nola egin daitekeen 3 erramintak erabiliz (15:53 - 1:02:00).",
       video: "https://www.youtube.com/live/SslqcFiQP7Q",
       script: ""
@@ -503,6 +502,7 @@
   function card(p, i){
     const isMulti = Array.isArray(p.videos) && p.videos.length > 0;
     const title = p.title && p.title.trim() !== "" ? p.title : `<span class="ph">Praktika ${i+1} — izenburua falta</span>`;
+    const showTeacher = Object.prototype.hasOwnProperty.call(p, "teacher");
     const teacher = p.teacher && p.teacher.trim() !== "" ? p.teacher : `<span class="ph">irakaslea falta</span>`;
     const desc = p.desc && p.desc.trim() !== "" ? p.desc : `<span class="ph">Azalpena laster gehituko da.</span>`;
     const el = document.createElement("div");
@@ -511,7 +511,7 @@
       <div class="card-top">
         <h3>${title}</h3>
       </div>
-      <div class="teacher">${teacher}</div>
+      ${showTeacher ? `<div class="teacher">${teacher}</div>` : ""}
       <div class="desc">${desc}</div>
       <div class="card-actions">
         ${isMulti ? multiVideoList(p.videos, i) : singleVideoActions(p)}
