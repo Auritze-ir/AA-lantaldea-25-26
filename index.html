@@ -51,6 +51,8 @@
     position:relative; z-index:1;
     padding:88px 64px 64px;
     max-width:1600px; margin:0 auto;
+    display:flex; flex-direction:column; align-items:center;
+    text-align:center;
   }
 
   .eyebrow{
@@ -83,6 +85,7 @@
     font-weight:650;
     letter-spacing:-.01em;
     max-width:18ch;
+    margin-left:auto; margin-right:auto;
   }
   h1 .accent{color:var(--signal);}
 
@@ -90,13 +93,12 @@
     color:var(--ink-dim);
     font-size:1.18rem;
     max-width:680px;
-    margin:0 0 40px;
+    margin:0 auto 40px;
   }
 
   .meta-row{
     display:flex; flex-wrap:wrap; gap:12px;
-    border-top:1px solid var(--line);
-    padding-top:24px;
+    justify-content:center;
   }
   .meta-row .pill{
     font-family:var(--mono);
@@ -125,27 +127,48 @@
 
   .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(340px, 1fr));
+    grid-template-columns:1fr;
     gap:22px;
-  }
-  .card.multi{
-    grid-column: span 2;
-  }
-  @media (max-width:780px){
-    .card.multi{ grid-column: span 1; }
   }
 
   .card{
     background:var(--panel);
     border:1px solid var(--line);
     border-radius:var(--radius);
-    padding:22px 22px 20px;
+    padding:28px 32px;
     display:flex; flex-direction:column; gap:14px;
-    transition:border-color .2s ease, transform .2s ease;
+    transition:border-color .2s ease;
   }
   .card:hover{
     border-color:var(--signal-dim);
-    transform:translateY(-2px);
+  }
+  .card:not(.multi){
+    display:grid;
+    grid-template-columns:1fr auto;
+    column-gap:32px;
+    row-gap:6px;
+    align-items:start;
+  }
+  .card:not(.multi) .card-top,
+  .card:not(.multi) .teacher,
+  .card:not(.multi) .desc{
+    grid-column:1;
+  }
+  .card:not(.multi) .card-actions{
+    grid-column:2;
+    grid-row:1 / 4;
+    align-self:center;
+    margin-top:0;
+  }
+  @media (max-width:680px){
+    .card:not(.multi){
+      grid-template-columns:1fr;
+    }
+    .card:not(.multi) .card-actions{
+      grid-column:1;
+      grid-row:auto;
+      align-self:start;
+    }
   }
 
   .card-top{
@@ -169,6 +192,12 @@
 
   .card-actions{
     display:flex; gap:10px; margin-top:4px; flex-wrap:wrap;
+  }
+  .card:not(.multi) .card-actions{
+    flex-direction:column; align-items:stretch;
+  }
+  .card:not(.multi) .card-actions .btn{
+    justify-content:center; white-space:nowrap;
   }
   .btn{
     font-family:var(--mono); font-size:13px;
@@ -218,6 +247,42 @@
   }
   footer strong{color:var(--ink);}
 
+  .prompt-modal{
+    position:fixed; inset:0; z-index:10;
+    background:rgba(5,8,11,.72);
+    display:none;
+    align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .prompt-modal.open{ display:flex; }
+  .prompt-modal-box{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    max-width:640px; width:100%;
+    max-height:80vh;
+    display:flex; flex-direction:column;
+    overflow:hidden;
+  }
+  .prompt-modal-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:16px 20px;
+    border-bottom:1px solid var(--line);
+    font-family:var(--mono); font-size:13px; color:var(--ink-dim);
+  }
+  .prompt-modal-x{
+    background:none; border:none; color:var(--ink-dim);
+    font-size:16px; cursor:pointer; line-height:1; padding:4px;
+  }
+  .prompt-modal-x:hover{ color:var(--ink); }
+  #prompt-modal-text{
+    margin:0; padding:20px;
+    overflow-y:auto;
+    font-family:var(--sans);
+    font-size:14.5px; line-height:1.6; color:var(--ink);
+    white-space:pre-wrap; word-wrap:break-word;
+  }
+
   @media (max-width:560px){
     header{padding:52px 18px 40px;}
     main{padding:0 18px 80px;}
@@ -250,49 +315,72 @@
   <span>HTML editagarria · GitHub Pages</span>
 </footer>
 
+<div class="prompt-modal" id="prompt-modal">
+  <div class="prompt-modal-box">
+    <div class="prompt-modal-head">
+      <span>Prompt-a</span>
+      <button type="button" class="prompt-modal-x" id="prompt-modal-close" aria-label="Itxi">✕</button>
+    </div>
+    <pre id="prompt-modal-text"></pre>
+  </div>
+</div>
+
 <script>
   // ALDATU hemen: praktika bakoitza objektu bat da.
   // title: irakaslearen praktikaren izena
   // teacher: irakaslearen izena
   // desc: azalpen laburra
   // video: Drive bideoaren link-a (bideo BAKARRA duten praktiketarako; hutsik = "laster")
-  // videos: array bat, bideo BATEN BAINO GEHIAGO duten praktiketarako -> { label, video }
+  // script: kodearen fitxategira link-a (aukerakoa, bideo bakarreko praktiketan)
+  // videos: array bat, bideo BATEN BAINO GEHIAGO duten praktiketarako -> { label, video, prompt }
+  //   prompt: testua, "Prompt-a ikusi" botoia agertzeko (aukerakoa, bideo-lerro bakoitzeko)
   const practices = [
     {
       title: "Zaintzen kudeaketa automatizatua — Automozioa",
-      teacher: "",
+      teacher: "Josu Ancín",
       desc: "Automozioko mintegian irakasleren bat falta denean egin beharreko zaintzak kudeatzeko aplikazioa, AA erabiliz garatua. Bideoan jasota: egindako lana, aplikazioaren funtzionamendua eta etorkizunean berdina inplementatu nahi izanez gero jarraitu beharreko pausoak.",
-      video: ""
+      video: "https://drive.google.com/file/d/1yaEA2zsVYxWYwHbWTYJH-jAzA3s87zoO/view",
+      script: ""
     },
     {
       title: "NotebookLM gelan",
-      teacher: "",
+      teacher: "Eneko Oyarbide",
       desc: "NotebookLM erabiltzeko 3 bideoko gida: iturrien sarrera, koadernoaren konfigurazioa eta aurkezpenen sorrera.",
       videos: [
         { label: "1. Sarrera eta iturrietako berrikuntzak", video: "" },
-        { label: "2. Koadernoaren konfigurazioa eta Promt proposamena", video: "" },
-        { label: "3. Aurkezpenen konfigurazioa eta Promt-aren sorrera", video: "" },
+        { label: "2. Koadernoaren konfigurazioa eta Promt proposamena", video: "", prompt: "DIAPOSITIBAK / AURKEZPENAK\nPrestatu ezazu \"3 Bateriak\" gaiaren (eta iturri dokumentuaren) inguruko presentazio batzuk. Ez erabili ez 0 Elektrizitatearen Aurkezpena, ez 1 OHMen legea, ez 2 Zirkuito Elektrikoen Osagaiak ezta 4 Karga eta abio zirkuitoak. IDU Errespetatzeko kontuan hartu Iturrietan \"IDU HEzkuntza Berezia\" eta \"IDU Ikaskuntza Diseinu Unibertsala\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez IDUri buruzkoa.\nAdimen artifizialaren erabilera arduratsu bat egiteko kontuan hartu Iturrietan \"AA Edukien eta tresenen sorrera\" eta \"AA Pribatasun eta legedia\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez Adimen artifizialari buruzkoa.\n\"3 Bateriak\" gaiaren, lehenego puntua \"1. La bateria\" eta bigarrena \"2. baterias de baja tension, circuitos y arranque\" gaiak azaltzea nahi det, hau da, beste puntuak ez dira azaldu behar. Zehazki azaldu behar EZ direnak \"3. Baterias de alta tension de hibridos y electricos\", \"4 Carga de baterias para vehiculos hibridos o electricos\", eta \"5 Seguridad en los vehiculos EV y PHEV\" dira. \"3 Bateriak\" iturri dokumentuaren egitura mantendu ezazu, hau da, hasi \"1. La bateria\" aurkezpenarekin. Gero jarraitu \"2. baterias de baja tension, circuitos y arranque\".\nMesedez \"3 Bateriak\" dokumentuaren egitura eta puntuak azaldu daitezela eta ez egin laburpenik, atal guztiak bere orrialdea jaso dezatela. Hau da, adibidez bigarren gaian \"2.1 bateria de plomo-acido\" eta \"2.1.1 constitucion de la bateria\" eta horrelako beste atal guztiak azaldu behar dira. Garrantzitsua da \"2.1.2. Proceso electroquímico de la batería\" atala agertzea eta diapositiba bat baino gehiago edukitzea hau azaltzeko, karga eta deskarga prozesuak ondo azalduz. Bateria mota bakoitzak ere aurkezpen orrialde bat eduki behar du, motak nahastu gabe, eta azkenik mota desberdin arteko konparaketa diapositiba bat egin, bateria mota bakoitzaren abantaila eta desabanatialika komentatuz. \"2.5. Características y nomenclatura de la batería\" atala ere ondo azaldu, komentatzen diren atal guztiak esplikatuz. \"Código 2D de una batería\" eta \"El cógido BEM\" ondo azaldu ere. \"2.6. Operaciones con baterías\" atalean, konprobazio bakoitzaren diapositiba bat egin, 2.7, 2.8, 2.9 eta 2.10 atalekin bezala.\nAurkezpenaren estiloari buruz honakoa kontuan eduki: - Bi irudi gehitu dizkizut iturrietan, \"EJ-GV Hezkuntza-saila JPG.jpg\" eta \"boskito-auto.jpeg\". Itsasi irudi hauek presentazioaren orrialdea bakoitzeko beheko zatian, bata alde batetara eta beste bestean. Irudi hauek ez daitezela nahastu zuk prestatutako edukiarekin, bi irudi hauen gainean lerro bat jarri eta edukia goian geratu dadila eta bi irudi hauek beheko zatian, orrialdearen gehiengoa zuk sortutako edukiarentzako izanez.\nAurkezpeneko orrialde guztien atzeko zatia txuria izan dadila, ez erabili kuaderno itxurako atzeko zati hori, lehenego orrialdeko ordenagailu itxurako fondo hori ere txuria izan dadila." },
+        { label: "3. Aurkezpenen konfigurazioa eta Promt-aren sorrera", video: "", prompt: "KOADERNO KONFIGURAZIOA\nHasierako Lanbide heziketako irakaslea naiz eta Automozioko mintegian Ibilgailuen mantenimenduko zikloan elektrizidadea ikarasten ari naiz.\nNire helburua IDUko ideiak errespetatuz, hau da, ikasle mota guztientzako ikasketa bilatuz (ikusi iturrietan) klaseak prestatzea da. Zure rola Lanbide Heziketako (LH) irakasleentzako laguntzaile pedagogiko aditua izatea da. Zure helburua kargatutako dokumentu eta iturrietan oinarrituta klaseak prestatzen laguntzea da, LHko metodologia praktiko eta aplikatura bideratuz (IDU, erronketan oinarritutako ikaskuntza, ETHAZI, etab.), ahalik eta modurik osatuen eta eraginkorrenean irakasten lagun diezadazun.\nBaldintzak: Zerbait azaltzen denean, egin ezazu modu sinplean eta eguneroko adibideekin eta IDU Metodoa aplikatuz; bertan, eskatzen dizudana modu errazean ulerarazi behar dira adibideak eta kasuak erabiliz, baina gaiaren terminologia garrantzitsua alde batera utzi gabe. LHko ikasleentzat egokia den hizkera argia, profesionala eta teknikoa erabili, baina betiere modu praktikoan azalduta. Erantzunek oso bisualak eta eskaneatzeko errazak izan behar dute. Erabili izenburuak, buletak, taulak eta letra lodia funtsezko ideiak nabarmentzeko.\nEDUKI MOTAK: Zure erantzunetan, material hauek diseinatzen lagundu behar didazu (nik eskatzen dizudanaren arabera):\n   - Klaseko saioetarako gida azkarrak edo eskema argiak.\n   - Ariketa praktikoak, tailerreko lanak edo kasu azterketak (pausoz pauso, ebaluazio-irizpideekin eta soluzioekin).\n   - Diapositibak edo aurkezpenak egiteko gidoi egituratuak (pantailaz pantaila zer jarri behar den zehaztuz).\n   - Ikus-entzunezko materialetarako ideiak: bideo gomendioak (zer bilatu) edo bideoak grabatzeko gidoi laburrak.\nKontuan eduki Adimen artifizialaren erabilera arduratsurako eman dizudan informazioa, koaderno honetan edukia sortzen duzunerako.\nSaihestu: beharrezkoa ez den jerga, azalpen teknikoegiak, eta erantzun oso luzeak edo egiturarik gabeak.\nErantzuten duzun bakoitzean: aipatu iturri zehatza, antolatu informazioa egitura argi batekin, eta erantzun bakoitzaren amaieran ezagutza egiaztatzeko jarraipen-galdera bat egin.\nEsplikatzeko, Galdetzeko edo aztertzeko eskatzen badizut, egin ezazu Hasierako Lanbide Heziketako benetako azterketa bat balitz bezala, Hasierako Lanbide Heziketako zailtasun-mailarekin, gaia benetako azterketa-motako informazioarekin errepasatzen eta menderatzen laguntzeko.\nErantzun bakoitzean tranpa edo nahasmena izan daitezkeen ideiak hautematen badituzu, jakinarazi behar didazu, gaia hobeto uler dezagun, bai ni irakasle bezala eta ikasleei.\nIDU Errespetatzeko kontuan hartu Iturrietan \"IDU HEzkuntza Berezia\" eta \"IDU Ikaskuntza Diseinu Unibertsala\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez IDUri buruzkoa.\nAdimen artifizialaren erabilera arduratsu bat egiteko kontuan hartu Iturrietan \"AA Edukien eta tresenen sorrera\" eta \"AA Pribatasun eta legedia\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez Adimen artifizialari buruzkoa." },
       ]
     },
   ];
 
   const grid = document.getElementById("grid");
+  const promptStore = {};
 
   function singleVideoActions(p){
     const hasVideo = p.video && p.video.trim() !== "";
-    return hasVideo
+    const hasScript = p.script && p.script.trim() !== "";
+    const videoBtn = hasVideo
       ? `<a class="btn is-live" href="${p.video}" target="_blank" rel="noopener">▶ Bideoa ikusi</a>`
       : `<span class="btn">▶ Bideoa laster</span>`;
+    const scriptBtn = hasScript
+      ? `<a class="btn is-live" href="${p.script}" target="_blank" rel="noopener">&lt;/&gt; Script-a ikusi</a>`
+      : "";
+    return videoBtn + scriptBtn;
   }
 
-  function multiVideoList(videos){
+  function multiVideoList(videos, practiceIdx){
     return `<div class="video-list">${videos.map((v, idx) => {
       const hasVideo = v.video && v.video.trim() !== "";
+      const hasPrompt = v.prompt && v.prompt.trim() !== "";
       const label = v.label && v.label.trim() !== "" ? v.label : `<span class="ph">izenburua falta</span>`;
+      const promptKey = `${practiceIdx}-${idx}`;
+      if (hasPrompt) promptStore[promptKey] = v.prompt;
       return `
         <div class="video-row">
           <span class="idx">${idx + 1}.</span>
           <span class="vlabel">${label}</span>
+          ${hasPrompt ? `<button type="button" class="btn is-live prompt-btn" data-prompt-key="${promptKey}">Prompt-a ikusi</button>` : ""}
           ${hasVideo
             ? `<a class="btn is-live" href="${v.video}" target="_blank" rel="noopener">▶ Ikusi</a>`
             : `<span class="btn">▶ Laster</span>`}
@@ -314,13 +402,29 @@
       <div class="teacher">${teacher}</div>
       <div class="desc">${desc}</div>
       <div class="card-actions">
-        ${isMulti ? multiVideoList(p.videos) : singleVideoActions(p)}
+        ${isMulti ? multiVideoList(p.videos, i) : singleVideoActions(p)}
       </div>
     `;
     return el;
   }
 
   practices.forEach((p, i) => grid.appendChild(card(p, i)));
+
+  // Prompt modal
+  const modal = document.getElementById("prompt-modal");
+  const modalText = document.getElementById("prompt-modal-text");
+  const modalClose = document.getElementById("prompt-modal-close");
+
+  grid.addEventListener("click", (e) => {
+    const btn = e.target.closest(".prompt-btn");
+    if (!btn) return;
+    modalText.textContent = promptStore[btn.dataset.promptKey] || "";
+    modal.classList.add("open");
+  });
+  modalClose.addEventListener("click", () => modal.classList.remove("open"));
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") modal.classList.remove("open"); });
+
 </script>
 
 </body>
