@@ -86,7 +86,7 @@
 
   header{
     position:relative; z-index:1;
-    padding:72px 64px 56px;
+    padding:72px 64px 24px;
     max-width:1600px; margin:0 auto;
     display:flex; flex-direction:column; align-items:center;
     text-align:center;
@@ -107,7 +107,7 @@
     color:var(--ink-dim);
     font-size:1.18rem;
     max-width:680px;
-    margin:0 auto 40px;
+    margin:0 auto;
   }
 
   main{
@@ -117,13 +117,13 @@
   }
 
   .note-banner{
-    margin-top:48px;
-    max-width:980px;
-    margin-left:auto; margin-right:auto;
+    margin-top:56px;
     padding:20px 28px;
     border:1px solid var(--signal-dim);
     background:rgba(94,224,192,.05);
     border-radius:10px;
+    max-width:980px;
+    margin-left:auto; margin-right:auto;
     display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 16px;
   }
   .note-banner-label{
@@ -141,9 +141,7 @@
   .section-head{
     display:flex; align-items:baseline; justify-content:space-between;
     gap:16px; flex-wrap:wrap;
-    margin:56px auto 32px;
-    padding-top:40px;
-    border-top:1px solid var(--line);
+    margin:0 auto 28px;
     max-width:980px;
   }
   .section-head h2{
@@ -339,18 +337,18 @@
   </header>
 
 <main>
+  <div class="section-head">
+    <h2>Praktiken zerrenda</h2>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
   <div class="note-banner">
     <span class="note-banner-label">Iaz prestatutako ikastaroa</span>
     <p>Adimen artifizial sortzailea — Moodle ikastaroa, gogoratzeko edo errepasatzeko eskuragarri.
       <a href="https://elearning20.hezkuntza.net/012468/course/view.php?id=587" target="_blank" rel="noopener">Ikastarora joan →</a>
     </p>
   </div>
-
-  <div class="section-head">
-    <h2>Praktiken zerrenda</h2>
-  </div>
-
-  <div class="grid" id="grid"></div>
 </main>
 
 <footer>
@@ -390,9 +388,9 @@
       teacher: "Eneko Oyarbide",
       desc: "NotebookLM erabiltzeko 3 bideoko gida: iturrien sarrera, koadernoaren konfigurazioa eta aurkezpenen sorrera.",
       videos: [
-        { label: "1. Sarrera eta iturrietako berrikuntzak", video: "" },
-        { label: "2. Koadernoaren konfigurazioa eta Promt proposamena", video: "", prompt: "DIAPOSITIBAK / AURKEZPENAK\nPrestatu ezazu \"3 Bateriak\" gaiaren (eta iturri dokumentuaren) inguruko presentazio batzuk. Ez erabili ez 0 Elektrizitatearen Aurkezpena, ez 1 OHMen legea, ez 2 Zirkuito Elektrikoen Osagaiak ezta 4 Karga eta abio zirkuitoak. IDU Errespetatzeko kontuan hartu Iturrietan \"IDU HEzkuntza Berezia\" eta \"IDU Ikaskuntza Diseinu Unibertsala\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez IDUri buruzkoa.\nAdimen artifizialaren erabilera arduratsu bat egiteko kontuan hartu Iturrietan \"AA Edukien eta tresenen sorrera\" eta \"AA Pribatasun eta legedia\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez Adimen artifizialari buruzkoa.\n\"3 Bateriak\" gaiaren, lehenego puntua \"1. La bateria\" eta bigarrena \"2. baterias de baja tension, circuitos y arranque\" gaiak azaltzea nahi det, hau da, beste puntuak ez dira azaldu behar. Zehazki azaldu behar EZ direnak \"3. Baterias de alta tension de hibridos y electricos\", \"4 Carga de baterias para vehiculos hibridos o electricos\", eta \"5 Seguridad en los vehiculos EV y PHEV\" dira. \"3 Bateriak\" iturri dokumentuaren egitura mantendu ezazu, hau da, hasi \"1. La bateria\" aurkezpenarekin. Gero jarraitu \"2. baterias de baja tension, circuitos y arranque\".\nMesedez \"3 Bateriak\" dokumentuaren egitura eta puntuak azaldu daitezela eta ez egin laburpenik, atal guztiak bere orrialdea jaso dezatela. Hau da, adibidez bigarren gaian \"2.1 bateria de plomo-acido\" eta \"2.1.1 constitucion de la bateria\" eta horrelako beste atal guztiak azaldu behar dira. Garrantzitsua da \"2.1.2. Proceso electroquímico de la batería\" atala agertzea eta diapositiba bat baino gehiago edukitzea hau azaltzeko, karga eta deskarga prozesuak ondo azalduz. Bateria mota bakoitzak ere aurkezpen orrialde bat eduki behar du, motak nahastu gabe, eta azkenik mota desberdin arteko konparaketa diapositiba bat egin, bateria mota bakoitzaren abantaila eta desabanatialika komentatuz. \"2.5. Características y nomenclatura de la batería\" atala ere ondo azaldu, komentatzen diren atal guztiak esplikatuz. \"Código 2D de una batería\" eta \"El cógido BEM\" ondo azaldu ere. \"2.6. Operaciones con baterías\" atalean, konprobazio bakoitzaren diapositiba bat egin, 2.7, 2.8, 2.9 eta 2.10 atalekin bezala.\nAurkezpenaren estiloari buruz honakoa kontuan eduki: - Bi irudi gehitu dizkizut iturrietan, \"EJ-GV Hezkuntza-saila JPG.jpg\" eta \"boskito-auto.jpeg\". Itsasi irudi hauek presentazioaren orrialdea bakoitzeko beheko zatian, bata alde batetara eta beste bestean. Irudi hauek ez daitezela nahastu zuk prestatutako edukiarekin, bi irudi hauen gainean lerro bat jarri eta edukia goian geratu dadila eta bi irudi hauek beheko zatian, orrialdearen gehiengoa zuk sortutako edukiarentzako izanez.\nAurkezpeneko orrialde guztien atzeko zatia txuria izan dadila, ez erabili kuaderno itxurako atzeko zati hori, lehenego orrialdeko ordenagailu itxurako fondo hori ere txuria izan dadila." },
-        { label: "3. Aurkezpenen konfigurazioa eta Promt-aren sorrera", video: "", prompt: "KOADERNO KONFIGURAZIOA\nHasierako Lanbide heziketako irakaslea naiz eta Automozioko mintegian Ibilgailuen mantenimenduko zikloan elektrizidadea ikarasten ari naiz.\nNire helburua IDUko ideiak errespetatuz, hau da, ikasle mota guztientzako ikasketa bilatuz (ikusi iturrietan) klaseak prestatzea da. Zure rola Lanbide Heziketako (LH) irakasleentzako laguntzaile pedagogiko aditua izatea da. Zure helburua kargatutako dokumentu eta iturrietan oinarrituta klaseak prestatzen laguntzea da, LHko metodologia praktiko eta aplikatura bideratuz (IDU, erronketan oinarritutako ikaskuntza, ETHAZI, etab.), ahalik eta modurik osatuen eta eraginkorrenean irakasten lagun diezadazun.\nBaldintzak: Zerbait azaltzen denean, egin ezazu modu sinplean eta eguneroko adibideekin eta IDU Metodoa aplikatuz; bertan, eskatzen dizudana modu errazean ulerarazi behar dira adibideak eta kasuak erabiliz, baina gaiaren terminologia garrantzitsua alde batera utzi gabe. LHko ikasleentzat egokia den hizkera argia, profesionala eta teknikoa erabili, baina betiere modu praktikoan azalduta. Erantzunek oso bisualak eta eskaneatzeko errazak izan behar dute. Erabili izenburuak, buletak, taulak eta letra lodia funtsezko ideiak nabarmentzeko.\nEDUKI MOTAK: Zure erantzunetan, material hauek diseinatzen lagundu behar didazu (nik eskatzen dizudanaren arabera):\n   - Klaseko saioetarako gida azkarrak edo eskema argiak.\n   - Ariketa praktikoak, tailerreko lanak edo kasu azterketak (pausoz pauso, ebaluazio-irizpideekin eta soluzioekin).\n   - Diapositibak edo aurkezpenak egiteko gidoi egituratuak (pantailaz pantaila zer jarri behar den zehaztuz).\n   - Ikus-entzunezko materialetarako ideiak: bideo gomendioak (zer bilatu) edo bideoak grabatzeko gidoi laburrak.\nKontuan eduki Adimen artifizialaren erabilera arduratsurako eman dizudan informazioa, koaderno honetan edukia sortzen duzunerako.\nSaihestu: beharrezkoa ez den jerga, azalpen teknikoegiak, eta erantzun oso luzeak edo egiturarik gabeak.\nErantzuten duzun bakoitzean: aipatu iturri zehatza, antolatu informazioa egitura argi batekin, eta erantzun bakoitzaren amaieran ezagutza egiaztatzeko jarraipen-galdera bat egin.\nEsplikatzeko, Galdetzeko edo aztertzeko eskatzen badizut, egin ezazu Hasierako Lanbide Heziketako benetako azterketa bat balitz bezala, Hasierako Lanbide Heziketako zailtasun-mailarekin, gaia benetako azterketa-motako informazioarekin errepasatzen eta menderatzen laguntzeko.\nErantzun bakoitzean tranpa edo nahasmena izan daitezkeen ideiak hautematen badituzu, jakinarazi behar didazu, gaia hobeto uler dezagun, bai ni irakasle bezala eta ikasleei.\nIDU Errespetatzeko kontuan hartu Iturrietan \"IDU HEzkuntza Berezia\" eta \"IDU Ikaskuntza Diseinu Unibertsala\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez IDUri buruzkoa.\nAdimen artifizialaren erabilera arduratsu bat egiteko kontuan hartu Iturrietan \"AA Edukien eta tresenen sorrera\" eta \"AA Pribatasun eta legedia\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez Adimen artifizialari buruzkoa." },
+        { label: "Sarrera eta iturrietako berrikuntzak", video: "https://drive.google.com/file/d/11GMRQ9ZSdALbvomXxdB7pbzmW3eVKBzk/view" },
+        { label: "Koadernoaren konfigurazioa eta Promt proposamena", video: "https://drive.google.com/file/d/11GMRQ9ZSdALbvomXxdB7pbzmW3eVKBzk/view", prompt: "DIAPOSITIBAK / AURKEZPENAK\nPrestatu ezazu \"3 Bateriak\" gaiaren (eta iturri dokumentuaren) inguruko presentazio batzuk. Ez erabili ez 0 Elektrizitatearen Aurkezpena, ez 1 OHMen legea, ez 2 Zirkuito Elektrikoen Osagaiak ezta 4 Karga eta abio zirkuitoak. IDU Errespetatzeko kontuan hartu Iturrietan \"IDU HEzkuntza Berezia\" eta \"IDU Ikaskuntza Diseinu Unibertsala\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez IDUri buruzkoa.\nAdimen artifizialaren erabilera arduratsu bat egiteko kontuan hartu Iturrietan \"AA Edukien eta tresenen sorrera\" eta \"AA Pribatasun eta legedia\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez Adimen artifizialari buruzkoa.\n\"3 Bateriak\" gaiaren, lehenego puntua \"1. La bateria\" eta bigarrena \"2. baterias de baja tension, circuitos y arranque\" gaiak azaltzea nahi det, hau da, beste puntuak ez dira azaldu behar. Zehazki azaldu behar EZ direnak \"3. Baterias de alta tension de hibridos y electricos\", \"4 Carga de baterias para vehiculos hibridos o electricos\", eta \"5 Seguridad en los vehiculos EV y PHEV\" dira. \"3 Bateriak\" iturri dokumentuaren egitura mantendu ezazu, hau da, hasi \"1. La bateria\" aurkezpenarekin. Gero jarraitu \"2. baterias de baja tension, circuitos y arranque\".\nMesedez \"3 Bateriak\" dokumentuaren egitura eta puntuak azaldu daitezela eta ez egin laburpenik, atal guztiak bere orrialdea jaso dezatela. Hau da, adibidez bigarren gaian \"2.1 bateria de plomo-acido\" eta \"2.1.1 constitucion de la bateria\" eta horrelako beste atal guztiak azaldu behar dira. Garrantzitsua da \"2.1.2. Proceso electroquímico de la batería\" atala agertzea eta diapositiba bat baino gehiago edukitzea hau azaltzeko, karga eta deskarga prozesuak ondo azalduz. Bateria mota bakoitzak ere aurkezpen orrialde bat eduki behar du, motak nahastu gabe, eta azkenik mota desberdin arteko konparaketa diapositiba bat egin, bateria mota bakoitzaren abantaila eta desabanatialika komentatuz. \"2.5. Características y nomenclatura de la batería\" atala ere ondo azaldu, komentatzen diren atal guztiak esplikatuz. \"Código 2D de una batería\" eta \"El cógido BEM\" ondo azaldu ere. \"2.6. Operaciones con baterías\" atalean, konprobazio bakoitzaren diapositiba bat egin, 2.7, 2.8, 2.9 eta 2.10 atalekin bezala.\nAurkezpenaren estiloari buruz honakoa kontuan eduki: - Bi irudi gehitu dizkizut iturrietan, \"EJ-GV Hezkuntza-saila JPG.jpg\" eta \"boskito-auto.jpeg\". Itsasi irudi hauek presentazioaren orrialdea bakoitzeko beheko zatian, bata alde batetara eta beste bestean. Irudi hauek ez daitezela nahastu zuk prestatutako edukiarekin, bi irudi hauen gainean lerro bat jarri eta edukia goian geratu dadila eta bi irudi hauek beheko zatian, orrialdearen gehiengoa zuk sortutako edukiarentzako izanez.\nAurkezpeneko orrialde guztien atzeko zatia txuria izan dadila, ez erabili kuaderno itxurako atzeko zati hori, lehenego orrialdeko ordenagailu itxurako fondo hori ere txuria izan dadila." },
+        { label: "Aurkezpenen konfigurazioa eta Promt-aren sorrera", video: "https://drive.google.com/file/d/11GMRQ9ZSdALbvomXxdB7pbzmW3eVKBzk/view", prompt: "KOADERNO KONFIGURAZIOA\nHasierako Lanbide heziketako irakaslea naiz eta Automozioko mintegian Ibilgailuen mantenimenduko zikloan elektrizidadea ikarasten ari naiz.\nNire helburua IDUko ideiak errespetatuz, hau da, ikasle mota guztientzako ikasketa bilatuz (ikusi iturrietan) klaseak prestatzea da. Zure rola Lanbide Heziketako (LH) irakasleentzako laguntzaile pedagogiko aditua izatea da. Zure helburua kargatutako dokumentu eta iturrietan oinarrituta klaseak prestatzen laguntzea da, LHko metodologia praktiko eta aplikatura bideratuz (IDU, erronketan oinarritutako ikaskuntza, ETHAZI, etab.), ahalik eta modurik osatuen eta eraginkorrenean irakasten lagun diezadazun.\nBaldintzak: Zerbait azaltzen denean, egin ezazu modu sinplean eta eguneroko adibideekin eta IDU Metodoa aplikatuz; bertan, eskatzen dizudana modu errazean ulerarazi behar dira adibideak eta kasuak erabiliz, baina gaiaren terminologia garrantzitsua alde batera utzi gabe. LHko ikasleentzat egokia den hizkera argia, profesionala eta teknikoa erabili, baina betiere modu praktikoan azalduta. Erantzunek oso bisualak eta eskaneatzeko errazak izan behar dute. Erabili izenburuak, buletak, taulak eta letra lodia funtsezko ideiak nabarmentzeko.\nEDUKI MOTAK: Zure erantzunetan, material hauek diseinatzen lagundu behar didazu (nik eskatzen dizudanaren arabera):\n   - Klaseko saioetarako gida azkarrak edo eskema argiak.\n   - Ariketa praktikoak, tailerreko lanak edo kasu azterketak (pausoz pauso, ebaluazio-irizpideekin eta soluzioekin).\n   - Diapositibak edo aurkezpenak egiteko gidoi egituratuak (pantailaz pantaila zer jarri behar den zehaztuz).\n   - Ikus-entzunezko materialetarako ideiak: bideo gomendioak (zer bilatu) edo bideoak grabatzeko gidoi laburrak.\nKontuan eduki Adimen artifizialaren erabilera arduratsurako eman dizudan informazioa, koaderno honetan edukia sortzen duzunerako.\nSaihestu: beharrezkoa ez den jerga, azalpen teknikoegiak, eta erantzun oso luzeak edo egiturarik gabeak.\nErantzuten duzun bakoitzean: aipatu iturri zehatza, antolatu informazioa egitura argi batekin, eta erantzun bakoitzaren amaieran ezagutza egiaztatzeko jarraipen-galdera bat egin.\nEsplikatzeko, Galdetzeko edo aztertzeko eskatzen badizut, egin ezazu Hasierako Lanbide Heziketako benetako azterketa bat balitz bezala, Hasierako Lanbide Heziketako zailtasun-mailarekin, gaia benetako azterketa-motako informazioarekin errepasatzen eta menderatzen laguntzeko.\nErantzun bakoitzean tranpa edo nahasmena izan daitezkeen ideiak hautematen badituzu, jakinarazi behar didazu, gaia hobeto uler dezagun, bai ni irakasle bezala eta ikasleei.\nIDU Errespetatzeko kontuan hartu Iturrietan \"IDU HEzkuntza Berezia\" eta \"IDU Ikaskuntza Diseinu Unibertsala\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez IDUri buruzkoa.\nAdimen artifizialaren erabilera arduratsu bat egiteko kontuan hartu Iturrietan \"AA Edukien eta tresenen sorrera\" eta \"AA Pribatasun eta legedia\" etiketa duten dokumentuak. Dokumentu hauk erreferentzia gisa erabili, baina nik Elektrizitateari buruzko edukia sortzea nahi det, ez Adimen artifizialari buruzkoa." },
       ]
     },
   ];
