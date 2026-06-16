@@ -124,6 +124,44 @@
     padding:0 64px 140px;
   }
 
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:64px;
+  }
+  @media (max-width:900px){
+    .two-col{ grid-template-columns:1fr; gap:0; }
+  }
+
+  .col-left .grid, .col-right .grid{
+    max-width:none;
+    margin:0;
+  }
+
+  .grid-resources{
+    gap:16px;
+  }
+  .grid-resources .card{
+    padding:18px 22px;
+    border-left-width:2px;
+  }
+  .grid-resources .card h3{
+    font-size:1rem;
+  }
+  .grid-resources .desc{
+    font-size:13.5px;
+  }
+  .grid-resources .card:not(.multi){
+    grid-template-columns:1fr;
+  }
+  .grid-resources .card:not(.multi) .card-actions{
+    grid-column:1; grid-row:auto;
+    flex-direction:row; margin-top:6px;
+  }
+  .grid-resources .card-actions .btn{
+    padding:7px 12px; font-size:12px;
+  }
+
   .note-banner{
     margin-top:56px;
     padding:20px 28px;
@@ -149,8 +187,7 @@
   .section-head{
     display:flex; align-items:baseline; justify-content:space-between;
     gap:16px; flex-wrap:wrap;
-    margin:0 auto 28px;
-    max-width:980px;
+    margin:0 0 28px;
   }
   .section-head h2{
     font-size:1.6rem; margin:0; font-weight:650; letter-spacing:-.005em;
@@ -348,11 +385,21 @@
   </header>
 
 <main>
-  <div class="section-head">
-    <h2>Praktiken zerrenda</h2>
-  </div>
+  <div class="two-col">
+    <div class="col-left">
+      <div class="section-head">
+        <h2>Praktiken zerrenda</h2>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
 
-  <div class="grid" id="grid"></div>
+    <div class="col-right">
+      <div class="section-head">
+        <h2>Erabilitako bideo/errekurtso baliagarriak</h2>
+      </div>
+      <div class="grid grid-resources" id="resources-grid"></div>
+    </div>
+  </div>
 
   <div class="note-banner">
     <span class="note-banner-label">Iaz prestatutako ikastaroa</span>
@@ -406,7 +453,20 @@
     },
   ];
 
+  // Erabilitako bideo/errekurtso baliagarriak.
+  // Item bakoitza: { title, desc, video, script } (formatu bera praktika sinpleen bezala)
+  const resources = [
+    {
+      title: "Google Vids, Gemini & NotebookLM",
+      teacher: "",
+      desc: "Jarraian dagoen estekan, Google Vids & Gemini & NotebookLM erabilera praktikoa erakusten du. Ikaskuntza hibridorako proposamen baliagarria, PPT → Bideo nola egin daitekeen 3 erramintak erabiliz (15:53 - 1:02:00).",
+      video: "https://www.youtube.com/live/SslqcFiQP7Q",
+      script: ""
+    },
+  ];
+
   const grid = document.getElementById("grid");
+  const resourcesGrid = document.getElementById("resources-grid");
   const promptStore = {};
 
   function singleVideoActions(p){
@@ -461,6 +521,7 @@
   }
 
   practices.forEach((p, i) => grid.appendChild(card(p, i)));
+  resources.forEach((r, i) => resourcesGrid.appendChild(card(r, `r${i}`)));
 
   // Prompt modal
   const modal = document.getElementById("prompt-modal");
