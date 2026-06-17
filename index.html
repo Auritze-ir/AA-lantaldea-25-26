@@ -294,6 +294,13 @@
     display:flex; flex-direction:column;
     overflow:hidden;
   }
+  .prompt-modal-box.script-mode{
+    max-width:880px;
+  }
+  .prompt-modal-box.script-mode #prompt-modal-text{
+    font-family:var(--mono);
+    font-size:13px;
+  }
   .prompt-modal-head{
     display:flex; justify-content:space-between; align-items:center;
     padding:16px 20px;
@@ -328,7 +335,7 @@
     <span class="name">CIFP DON BOSCO LHII<small>Errenteria · Gipuzkoa</small></span>
   </div>
   <div class="nav-tags">
-    <span class="nav-tag-accent">AA Lantaldea - </span> <span class="nav-tag-plain"> Praktika onak eta errekurtsoak</span>
+    <span class="nav-tag-accent">AA Lantaldea - </span> <span class="nav-tag-plain">Praktika onak eta errekurtsoak</span>
   </div>
 </nav>
 
@@ -372,9 +379,9 @@
 </footer>
 
 <div class="prompt-modal" id="prompt-modal">
-  <div class="prompt-modal-box">
+  <div class="prompt-modal-box" id="prompt-modal-box">
     <div class="prompt-modal-head">
-      <span>Prompt-a</span>
+      <span id="prompt-modal-label">Prompt-a</span>
       <button type="button" class="prompt-modal-x" id="prompt-modal-close" aria-label="Itxi">✕</button>
     </div>
     <pre id="prompt-modal-text"></pre>
@@ -387,7 +394,7 @@
   // teacher: irakaslearen izena
   // desc: azalpen laburra
   // video: Drive bideoaren link-a (bideo BAKARRA duten praktiketarako; hutsik = "laster")
-  // script: kodearen fitxategira link-a (aukerakoa, bideo bakarreko praktiketan)
+  // script: kodearen testua, "Script-a ikusi" botoiak modal batean erakusteko (aukerakoa, bideo bakarreko praktiketan)
   // videos: array bat, bideo BATEN BAINO GEHIAGO duten praktiketarako -> { label, video, prompt }
   //   prompt: testua, "Prompt-a ikusi" botoia agertzeko (aukerakoa, bideo-lerro bakoitzeko)
   const practices = [
@@ -396,7 +403,128 @@
       teacher: "Josu Ancín",
       desc: "Automozioko mintegian irakasleren bat falta denean egin beharreko zaintzak kudeatzeko aplikazioa, AA erabiliz garatua. Bideoan jasota: egindako lana, aplikazioaren funtzionamendua eta etorkizunean berdina inplementatu nahi izanez gero jarraitu beharreko pausoak.",
       video: "https://drive.google.com/file/d/1yaEA2zsVYxWYwHbWTYJH-jAzA3s87zoO/view",
-      script: ""
+      script: `function agenteAvisoGuardias() {
+  var libro = SpreadsheetApp.getActiveSpreadsheet();
+  var hoy = new Date();
+  hoy.setHours(0,0,0,0);
+  
+  var miTelefono = "XXXXXXXXX"; 
+  var miApiKey = "XXXXXX";        
+
+  var hojaEmails = libro.getSheetByName("Emails");
+  var diccionarioEmails = {};
+  var dEmails = hojaEmails.getDataRange().getValues();
+  for (var e = 0; e < dEmails.length; e++) {
+    if (dEmails[e][0] && dEmails[e][1]) {
+      diccionarioEmails[dEmails[e][0].toString().trim().toUpperCase()] = dEmails[e][1].toString().trim();
+    }
+  }
+
+  var hojas = libro.getSheets();
+  var hojaActual = null;
+  for (var s = 0; s < hojas.length; s++) {
+    var nombre = hojas[s].getName();
+    if (nombre.includes("/")) {
+      try {
+        var partes = nombre.split("-")[0].split("/");
+        var fHoja = new Date(hoy.getFullYear(), parseInt(partes[1]) - 1, parseInt(partes[0]));
+        if (Math.abs(hoy - fHoja) < 7 * 24 * 60 * 60 * 1000) { 
+          hojaActual = hojas[s]; 
+          break; 
+        }
+      } catch(e) {}
+    }
+  }
+
+  if (!hojaActual) return;
+  
+  var datos = hojaActual.getDataRange().getValues();
+  var hoyTexto = Utilities.formatDate(hoy, "GMT+1", "yyyy/MM/dd");
+  var resumenWhatsApp = "Kaixo, gaurko zaintzak:\\n\\n";
+  var hayGuardias = false;
+  var ultimaFechaLeida = "";
+
+  for (var i = 3; i < datos.length; i++) {
+    var valorFecha = datos[i][2];
+    var fechaFila = "";
+    if (valorFecha instanceof Date) {
+      fechaFila = Utilities.formatDate(valorFecha, "GMT+1", "yyyy/MM/dd");
+      ultimaFechaLeida = fechaFila;
+    } else if (valorFecha && valorFecha.toString().trim() !== "") {
+      fechaFila = valorFecha.toString().trim();
+      ultimaFechaLeida = fechaFila;
+    } else {
+      fechaFila = ultimaFechaLeida;
+    }
+
+    if (fechaFila === hoyTexto) {
+      // Casilla de verificación en Columna F (Índice 5)
+      var esGuardia = (datos[i][5] === true); 
+      var profeRecibe = datos[i][4] ? datos[i][4].toString().trim().toUpperCase() : "";
+
+      if (esGuardia && profeRecibe !== "") {
+        hayGuardias = true;
+        
+        // ASIGNACIÓN SEGÚN TUS ÚLTIMAS INDICACIONES
+        var hora      = datos[i][3]  || "---"; // Columna D (3)
+        var falta     = datos[i][10] || "---"; // Columna K (10)
+        var gela      = datos[i][11] || "---"; // Columna L (11)
+        var grupo     = datos[i][12] || "---"; // Columna M (12)
+        var oharrak   = datos[i][13] || "";    // Columna N (13)
+
+        // Enviar Gmail
+        var email = diccionarioEmails[profeRecibe];
+        if (email) {
+          enviarEmail(email, profeRecibe, hora, gela, grupo, falta, oharrak);
+          Logger.log("✅ Enviado a: " + profeRecibe);
+        }
+
+        // WhatsApp: Hora. ordua: Profesor, Grupo, Aula
+        resumenWhatsApp += hora + ". ordua: " + profeRecibe + ", " + grupo + ", " + gela + "\\n";
+      }
+    }
+  }
+
+  if (hayGuardias) {
+    enviarWhatsApp(miTelefono, miApiKey, resumenWhatsApp);
+  } else {
+    Logger.log("No hay guardias marcadas para hoy.");
+  }
+}
+
+function enviarEmail(email, profe, hora, gela, grupo, falta, oharrak) {
+  var asunto = "⚠️ Zaintza! Duzu gaur " + hora + " orduan";
+  var textoOharrak = (oharrak.toString().trim() !== "") ? oharrak : "(Ez dago oharrik)";
+  
+  var cuerpo = "Kaixo " + profe + ",\\n\\n" +
+               falta + " irakaslea ordezkatzen duzu " + hora + " orduan.\\n\\n" +
+               gela + " gelan " + grupo + " taldearekin.\\n\\n" +
+               "OHARRAK:\\n" + textoOharrak + "\\n\\n" +
+               "Animo eta ondo izan,";
+  MailApp.sendEmail(email, asunto, cuerpo);
+programarActivadorFijo();}
+
+function enviarWhatsApp(telefono, apikey, mensaje) {
+  var url = "https://api.callmebot.com/whatsapp.php?phone=" + telefono + "&text=" + encodeURIComponent(mensaje) + "&apikey=" + apikey;
+  UrlFetchApp.fetch(url);
+}function programarActivadorFijo() {
+  // Borra activadores antiguos para no repetir envíos
+  var todosLosActivadores = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < todosLosActivadores.length; i++) {
+    ScriptApp.deleteTrigger(todosLosActivadores[i]);
+  }
+
+  // Crea el nuevo para las 07:30 de mañana
+  var mañana = new Date();
+  mañana.setDate(mañana.getDate() + 1);
+  mañana.setHours(7);
+  mañana.setMinutes(30);
+
+  ScriptApp.newTrigger("agenteAvisoGuardias")
+           .timeBased()
+           .at(mañana)
+           .create();
+}`
     },
     {
       title: "NotebookLM gelan",
@@ -424,16 +552,20 @@
   const grid = document.getElementById("grid");
   const resourcesGrid = document.getElementById("resources-grid");
   const promptStore = {};
+  const scriptStore = {};
 
-  function singleVideoActions(p){
+  function singleVideoActions(p, idx){
     const hasVideo = p.video && p.video.trim() !== "";
     const hasScript = p.script && p.script.trim() !== "";
     const videoBtn = hasVideo
       ? `<a class="btn is-live" href="${p.video}" target="_blank" rel="noopener">▶ Bideoa ikusi</a>`
       : `<span class="btn">▶ Bideoa laster</span>`;
-    const scriptBtn = hasScript
-      ? `<a class="btn is-live" href="${p.script}" target="_blank" rel="noopener">&lt;/&gt; Script-a ikusi</a>`
-      : "";
+    let scriptBtn = "";
+    if (hasScript) {
+      const scriptKey = `s${idx}`;
+      scriptStore[scriptKey] = p.script;
+      scriptBtn = `<button type="button" class="btn is-live script-btn" data-script-key="${scriptKey}">&lt;/&gt; Script-a ikusi</button>`;
+    }
     return videoBtn + scriptBtn;
   }
 
@@ -471,7 +603,7 @@
       ${showTeacher ? `<div class="teacher">${teacher}</div>` : ""}
       <div class="desc">${desc}</div>
       <div class="card-actions">
-        ${isMulti ? multiVideoList(p.videos, i) : singleVideoActions(p)}
+        ${isMulti ? multiVideoList(p.videos, i) : singleVideoActions(p, i)}
       </div>
     `;
     return el;
@@ -480,17 +612,31 @@
   practices.forEach((p, i) => grid.appendChild(card(p, i)));
   resources.forEach((r, i) => resourcesGrid.appendChild(card(r, `r${i}`)));
 
-  // Prompt modal
+  // Prompt eta script modal-a
   const modal = document.getElementById("prompt-modal");
+  const modalBox = document.getElementById("prompt-modal-box");
   const modalText = document.getElementById("prompt-modal-text");
   const modalClose = document.getElementById("prompt-modal-close");
+  const modalLabel = document.getElementById("prompt-modal-label");
 
-  grid.addEventListener("click", (e) => {
-    const btn = e.target.closest(".prompt-btn");
-    if (!btn) return;
-    modalText.textContent = promptStore[btn.dataset.promptKey] || "";
-    modal.classList.add("open");
-  });
+  function handleModalClick(e){
+    const promptBtn = e.target.closest(".prompt-btn");
+    const scriptBtn = e.target.closest(".script-btn");
+    if (promptBtn) {
+      modalLabel.textContent = "Prompt-a";
+      modalText.textContent = promptStore[promptBtn.dataset.promptKey] || "";
+      modalBox.classList.remove("script-mode");
+      modal.classList.add("open");
+    } else if (scriptBtn) {
+      modalLabel.textContent = "Script-a";
+      modalText.textContent = scriptStore[scriptBtn.dataset.scriptKey] || "";
+      modalBox.classList.add("script-mode");
+      modal.classList.add("open");
+    }
+  }
+  grid.addEventListener("click", handleModalClick);
+  resourcesGrid.addEventListener("click", handleModalClick);
+
   modalClose.addEventListener("click", () => modal.classList.remove("open"));
   modal.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("open"); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") modal.classList.remove("open"); });
