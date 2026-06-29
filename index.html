@@ -548,6 +548,12 @@ function enviarWhatsApp(telefono, apikey, mensaje) {
       desc: "OpenClaw kode irekiko AA agente-esparru bat da: LLM ereduak (Claude, Gemini, etab.) Telegram, Discord edo nabigatzailearen bidez konektatzen ditu, eta mezuak jasotzeaz gain ekintza errealak burutzen ditu (fitxategiak kudeatu, webguneak arakatu, automatizazioak sortu, etab.). Bideoan agente honen ezaugarriak eta erabilera praktikoa azaltzen dira.",
       video: "https://drive.google.com/file/d/1JwOkzFVXKMlrfUG-3xoRRPS6e16oIFx3/view?ts=6a353a1c"
     },
+    {
+      title: "Inplikazio Erregistroa — Google Apps Script Web App",
+      teacher: "Auritze Etxezarreta",
+      desc: "Tresna hau irakasleek ikasleen inplikazio-intzidentziak azkar erregistratzeko erabiltzen da, zuzenean Google Sheets-era bidaliz. Inplikazioa zeharkako gaitasunaren notaren penalizazioak automatikoki kalkulatzen dira.",
+      scriptLink: "https://github.com/Auritze-ir/Inplikazioa-script"
+    },
   ];
 
   // Erabilitako bideo/errekurtso baliagarriak.
@@ -569,14 +575,20 @@ function enviarWhatsApp(telefono, apikey, mensaje) {
   function singleVideoActions(p, idx){
     const hasVideo = p.video && p.video.trim() !== "";
     const hasScript = p.script && p.script.trim() !== "";
-    const videoBtn = hasVideo
-      ? `<a class="btn is-live" href="${p.video}" target="_blank" rel="noopener">▶ Bideoa ikusi</a>`
-      : `<span class="btn">▶ Bideoa laster</span>`;
+    const hasScriptLink = p.scriptLink && p.scriptLink.trim() !== "";
+    let videoBtn = "";
+    if (hasVideo) {
+      videoBtn = `<a class="btn is-live" href="${p.video}" target="_blank" rel="noopener">▶ Bideoa ikusi</a>`;
+    } else if (!hasScriptLink) {
+      videoBtn = `<span class="btn">▶ Bideoa laster</span>`;
+    }
     let scriptBtn = "";
     if (hasScript) {
       const scriptKey = `s${idx}`;
       scriptStore[scriptKey] = p.script;
       scriptBtn = `<button type="button" class="btn is-live script-btn" data-script-key="${scriptKey}">&lt;/&gt; Script-a ikusi</button>`;
+    } else if (hasScriptLink) {
+      scriptBtn = `<a class="btn is-live" href="${p.scriptLink}" target="_blank" rel="noopener">&lt;/&gt; GitHub-en ikusi</a>`;
     }
     return videoBtn + scriptBtn;
   }
